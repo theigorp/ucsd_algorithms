@@ -34,7 +34,31 @@ function readLine(line) {
 }
 
 function max(count, capacity, values, weights) {
-    // write your code here
+    const items = [];
+    const loot = {
+        value: 0,
+        weight: 0,
+    };
+    
+    for (let i = 0; i < count; i++) {
+        const pricePerKg = values[i] / weights[i];
+        items.push({
+            weight: weights[i],
+            value: values[i],
+            pricePerKg
+        });
+    }
+
+    items.sort((a, b) => b.pricePerKg - a.pricePerKg);
+
+    for (let compound of items) {
+        const maxCompoundWeight = Math.min(compound.weight, capacity);
+        loot.value += maxCompoundWeight * compound.pricePerKg;
+        loot.weight += maxCompoundWeight;
+        capacity -= maxCompoundWeight;
+    }
+
+    return loot.value;
 }
 
 module.exports = max;
