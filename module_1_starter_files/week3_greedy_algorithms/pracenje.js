@@ -117,9 +117,95 @@ function academicCelebrationParty(kidsAges) {
 // console.time('aa');
 // console.log(celebrationParty(randomKidAges));
 // console.timeEnd('aa');
-console.log(academicCelebrationParty([5, 7, 9, 11, 12, 13, 3, 3, 3, 3, 4, 5, 5, 5]));
+// console.log(academicCelebrationParty([5, 7, 9, 11, 12, 13, 3, 3, 3, 3, 4, 5, 5, 5]));
 // 1, 2, 2, 3, 4, 5, 6, 8, 12, 14
 
-function maxLootValue(weights, values, capacity) {
+function maxLootValue(weights, prices, knapsackCapacity) {
+  const availableItems = [];
+  const loot = {
+    value: 0,
+    weight: 0,
+  }
 
+  for (let i = 0; i < weights.length; i++) {
+    const pricePerKg = Number((prices[i] / weights[i]).toFixed(2));
+    availableItems.push({
+      weight: weights[i],
+      price: prices[i],
+      pricePerKg,
+    });
+  }
+
+  availableItems.sort((a, b) => b.pricePerKg - a.pricePerKg);
+  console.log(availableItems);
+  const totalAvailableWeight = availableItems.reduce((totalWeight, item) => totalWeight + item.weight, 0);
+  let index = 0;
+
+  while (loot.weight < knapsackCapacity) {
+    // if knapsackCapacity > totalAvailableWeight, this condition is needed to prevent infinite loop
+    if (index === availableItems.length) break;
+
+    if (loot.weight + availableItems[index].weight <= knapsackCapacity && knapsackCapacity <= totalAvailableWeight) {
+      loot.value += availableItems[index].price;
+      loot.weight += availableItems[index].weight;
+      index++;
+    } else {
+      const leftoverCapacity = knapsackCapacity - loot.weight;
+      if (leftoverCapacity <= availableItems[index].weight) {
+        loot.value += availableItems[index].pricePerKg * leftoverCapacity;
+        loot.weight += leftoverCapacity;
+      } else {
+        loot.value += availableItems[index].price;
+        loot.weight += availableItems[index].weight;
+      }
+      index++;
+    }
+  }
+
+  return loot;
 }
+// console.time('a')
+// console.log(maxLootValue([5, 4, 3], [30, 28, 24], 9));
+// console.log(maxLootValue([12, 7, 20], [50, 65, 52], 20));
+// console.log(maxLootValue([12, 7, 20, 14, 5, 7, 8, 27, 11, 3, 6, 9], [50, 65, 52, 53, 14, 65, 90, 122, 54, 43, 37, 33], 20));
+// console.log(maxLootValue([5, 4, 3], [30, 28, 24], 100));
+// console.timeEnd('a')
+
+function getMostValuableItemIndex(weights, values) {
+  let maxValuePerWeight = 0;
+  let mostValuableItemIndex = 0;
+
+  for (let i = 0; i < weights.length; i++) {
+    if (weights[i] > 0) {
+      if (values[i] / weights[i] > maxValuePerWeight) {
+        maxValuePerWeight = values[i] / weights[i];
+        mostValuableItemIndex = i;
+      }
+    }
+  }
+
+  return mostValuableItemIndex;
+}
+
+function academicMaxLootValue(weights, values, capacity) {
+  const amounts = Array(weights.length).fill(0);
+  let totalValue = 0;
+
+  for (let i = 0; i < weights.length; i++) {
+    const index = getMostValuableItemIndex(weights, values);
+    // this checks if the whole item weight can fit into leftover capacity. If yes, it takes the whole item. If not, it takes the leftover capacity "capacity" and calculates pricePerKg and multiplies with leftover capacity to get correct value
+    const a = Math.min(weights[index], capacity);
+    totalValue += a * (values[index] / weights[index]);
+    weights[index] -= a;
+    amounts[index] += a;
+    capacity -= a;
+  }
+
+  return {
+    totalValue,
+    amounts
+  }
+}
+console.time('a');
+console.log(academicMaxLootValue([5, 4, 3], [30, 28, 24], 100));
+console.timeEnd('a');
