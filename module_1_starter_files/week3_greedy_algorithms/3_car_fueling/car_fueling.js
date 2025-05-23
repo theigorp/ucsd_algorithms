@@ -1,34 +1,33 @@
 // by Igor Pavkovic
 
-// const readline = require('readline');
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout
-// });
+const readline = require('readline');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
-// const inputs = [];
-// let stops = [];
+const inputs = [];
+let stops = [];
 
-// rl.on('line', (line) => {
-//   inputs.push(line.trim());
+rl.on('line', (line) => {
+  inputs.push(line.trim());
 
-//   if (inputs.length === 4) {
-//     const d = parseInt(inputs[0], 10);
-//     const m = parseInt(inputs[1], 10);
-//     const stopsCount = parseInt(inputs[2], 10);
-//     stops = inputs[3].split(' ').map(Number);
+  if (inputs.length === 4) {
+    const d = parseInt(inputs[0], 10);
+    const m = parseInt(inputs[1], 10);
+    const stopsCount = parseInt(inputs[2], 10);
+    stops = inputs[3].split(' ').map(Number);
 
-//     if (stops.length !== stopsCount) {
-//       console.error(`Expected ${stopsCount} stops, but got ${stops.length}`);
-//       process.exit(1);
-//     }
+    if (stops.length !== stopsCount) {
+      console.error(`Expected ${stopsCount} stops, but got ${stops.length}`);
+      process.exit(1);
+    }
 
-//     const result = carFueling(d, m, stopsCount, stops);
-//     console.log(result);
-//     // rl.close();
-//     process.exit();
-//   }
-// });
+    const result = carFueling(d, m, stopsCount, stops);
+    console.log(result);
+    process.exit();
+  }
+});
 
 function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
   const isLastStationCloseEnoughToDestination = distance - gasStops[gasStops.length - 1] <= milesOnFullTank;
@@ -45,11 +44,21 @@ function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
   }
 
   let refillsNeeded = 0;
+  gasStops.unshift(0); // add 0 as the initial gas statio (home)
+  let lastVisitedStation = 0;
 
+  while (milesOnFullTank + lastVisitedStation < distance) {
+    const stationsInRange = gasStops.filter(stop => stop <= milesOnFullTank + lastVisitedStation);
+    lastVisitedStation = stationsInRange[stationsInRange.length - 1];
+    refillsNeeded++;
+  }
+
+  return refillsNeeded;
 }
 
 // console.log(carFueling(950, 400, 4, [200, 375, 550, 750]))
 // console.log(carFueling(950, 400, 4, [200, 200, 200, 200]))
+// console.log(carFueling(950, 400, 4, [200, 200, undefined, 200]))
 // console.log(carFueling(950, 400, 4, [0, 0, 0, 0]))
 // console.log(carFueling(1200, 400, 5, [200, 375, 550, 750, 1100]))
 // console.log(carFueling(10, 3, 4, [1, 2, 5, 9]))
@@ -57,4 +66,4 @@ function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
 // console.log(carFueling(650, 350, 3, [300, 450, 500]));
 // console.log(carFueling(20, 4, 4, [4, 8, 12, 16]));
 // console.log(carFueling(3, 1, 1, [2]));
-console.log(carFueling(10, 5, 2, [3, 7]));
+// console.log(carFueling(10, 5, 2, [3, 7]));
