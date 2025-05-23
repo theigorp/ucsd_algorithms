@@ -44,7 +44,6 @@ function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
   }
 
   let refillsNeeded = 0;
-  gasStops.unshift(0); // add 0 as the initial gas statio (home)
   let lastVisitedStation = 0;
 
   while (milesOnFullTank + lastVisitedStation < distance) {
