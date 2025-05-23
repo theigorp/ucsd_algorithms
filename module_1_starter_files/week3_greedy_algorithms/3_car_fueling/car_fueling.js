@@ -46,11 +46,6 @@ function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
 
   let refillsNeeded = 0;
 
-  for (let i = 0; i < stopsCount; i++) {
-    if (gasStops[i + 1] - gasStops[i] < milesOnFullTank - gasStops[i]) {
-
-    }
-  }
 }
 
 // console.log(carFueling(950, 400, 4, [200, 375, 550, 750]))
@@ -63,18 +58,3 @@ function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
 // console.log(carFueling(20, 4, 4, [4, 8, 12, 16]));
 // console.log(carFueling(3, 1, 1, [2]));
 console.log(carFueling(10, 5, 2, [3, 7]));
-
-
-/* 
-    for (let i = 0; i < gasStops.length; i++) {
-    const mileageLeft = (milesOnFullTank + (refillsNeeded * milesOnFullTank)) - gasStops[i];
-
-    if (i === gasStops.length - 1 && distance - gasStops[i] > mileageLeft) {
-      refillsNeeded++;
-    }
-    if (gasStops[i + 1] - gasStops[i] > mileageLeft) {
-      refillsNeeded++;
-    }
-  }
-*/ 
-
