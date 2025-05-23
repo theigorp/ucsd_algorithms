@@ -28,7 +28,28 @@ rl.on('line', (line) => {
     process.exit();
   }
 });
+/*
+  LOGIC:
+    Get list of all gas stations that are in range of milesOnFullTank. Choose the last element in that list
+    as the gas station we'll use to refill as we're certain that we'll have enough gas to that station.
+    Now our starting point is the gas station we just visited (lastVisitedStation) and we need to calculate
+    if we have enough fuel to get to our destination (distance) or we need to refill again. Therefore the
+    condition //! milesOnFullTank + lastVisitedStation < distance
+    If we don't have enough fuel, get the list of all gas stations that are in range of //! milesOnFullTank + lastVisitedStation
+    and choose the last element in the list as the gas station that we'll refill in.
 
+    BOUNDS:
+      - check if the last gas station is close enough to destination. In case we have to
+        refill at the last gas station, we need to make sure that it's in range of milesOnFullTank
+      - check if we can make it to the first gas station. If distance to the first gas station is
+        bigger than our milesOnFullTank, we can't make it
+      - check if the distance between each individual gas station is less than or equal to milesOnFullTank
+  
+  OPTIMIZATIONS:
+    There's a lot of validation initially to be done. Perhaps we can somehow do this inside the loop?
+    Validation takes 0(n), and filtering out the stations in range inside the while loop also takes 0(n), 
+    making this function to run in O(n^2). Maybe we could avoid filtering somehow by using a for loop?
+*/
 function carFueling(distance, milesOnFullTank, stopsCount, gasStops) {
   const isLastStationCloseEnoughToDestination = distance - gasStops[gasStops.length - 1] <= milesOnFullTank;
   const isFirstGasStationCloseEnough = gasStops[0] <= milesOnFullTank;
