@@ -21,35 +21,30 @@ rl.on('line', (line) => {
       segments.push([li, ri]);
     }
 
-    const result = collectingSignatures(segments);
+    const result = collectingSignatures(segments.length, segments);
     console.log(result);
     process.exit();
   }
 });
 
-function collectingSignatures(n, ...segments) {
+function collectingSignatures(n, segments) {
   const points = [];
-  console.log(segments);
-
+  let i = 0;
   segments.sort((a, b) => a[1] - b[1]);
   
-  for (let i = 0; i < segments.length; i++) {
+  while (i !== segments.length) {
     const rightmostValue = segments[i][1];
-    const remainingSegments = segments.slice(i + 1);
-    let coveredSegments = 0;
 
-    for (const segment of remainingSegments) {
-      if (segment[0] <= rightmostValue) {
-        coveredSegments++;
-      }
+    while (i !== segments.length && segments[i][0] <= rightmostValue) {
+      i++;
     }
 
     points.push(rightmostValue);
-    segments.splice(0, coveredSegments);
   }
 
   return `${points.length}\n${points.toString().replaceAll(',', ' ')}`;
 }
 
 // console.log(collectingSignatures(3, [[1, 3], [2,5], [3,6]]))
+// console.log(collectingSignatures(3, [[1, 2], [2,3], [7,9]]))
 // console.log(collectingSignatures(4, [[1, 3], [2,5], [4,7], [5,6]]))
