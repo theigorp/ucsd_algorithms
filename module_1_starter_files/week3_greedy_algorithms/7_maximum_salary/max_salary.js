@@ -26,17 +26,44 @@
 //   }
 // });
 
-function maxSalary(n, digits) {
-  const individualDigits = [];
+function maxSalary(n, numbers) {
+  numbers.sort((a, b) => b - a);
+  const stringNumbers = numbers.map((number) => String(number));
+  const largestNumber = stringNumbers[0];
 
-  for (let i = 0; i < n; i++) {
-    const digitLength = String(digits[i]).length;
-    
-    for (let j = 0; j < digitLength; i++) {
-      // individualDigits.push(digits[i] % )
-    }
+  // stringNumbers.sort((a,b) => b[1] - a[1]);
+  // return stringNumbers;
+
+  for (let i = 0; i < largestNumber.length; i++) {
+    // for (const number of stringNumbers) {
+    //   console.log(number, i);
+    // }
+    stringNumbers.sort((a, b) => {
+      console.log('i', i);
+      console.log('a', a);
+      console.log('b', b);
+      let aIndex = i;
+      let bIndex = i;
+
+      if (!a[i]) {
+        console.log('aIndex changed');
+        aIndex = a.length - 1;
+      }
+      if (!b[i]) {
+        console.log('bIndex changed');
+        bIndex = b.length - 1;
+      }
+
+      console.log('aIndex', aIndex);
+      console.log('bIndex', bIndex);
+      return b[bIndex] > a[aIndex] ? 1 : -1;
+    });
   }
+  return stringNumbers;
+  return ':)';
 }
 
-console.log(maxSalary(5, [89, 215, 6, 7, 9]));
-// 8,9,2,1,5,6,7,9 -> 99876512
+// console.log(maxSalary(5, [89, 215, 6, 7, 9]));
+// 98976215
+console.log(maxSalary(5, [42, 4, 465, 46, 427]));
+// 46546442742
