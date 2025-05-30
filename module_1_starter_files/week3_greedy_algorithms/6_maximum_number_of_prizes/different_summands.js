@@ -28,7 +28,15 @@ function getSum(array) {
   }
   return sum;
 }
-
+/*
+  LOGIC:
+  Starting from 1 will always be a correct greedy choice. Also, by summing each number from 1, we ensure there will be no duplicates.
+  We start from 1 and add each consecutive number to our sum variable. If sum is equal to n, simply return k. If it's not equal to n
+  then it must be larger because the last element we added (summed) made it greater than n. We will remove that number from the end of
+  the array and calculate what's the currentSum (without that number). By subtracting currentSum from n, we get the number we need. If
+  k doesn't include that number, we push it to k and return k. If it includes that number, we repeat the process of removing the last
+  number, calculating the numberNeeded and pushing it to k (it's a guarantee that it won't be inlcuded in k).
+*/
 function maxNumberOfPrizes(n) {
   const k = [];
 
