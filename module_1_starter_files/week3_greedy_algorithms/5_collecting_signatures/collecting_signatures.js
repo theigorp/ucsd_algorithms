@@ -26,7 +26,11 @@ rl.on('line', (line) => {
     process.exit();
   }
 });
-
+/*
+  LOGIC: We sort the segments by the right value so that it's easier to tell which ones overlap. We choose the rightmost
+  value of the first segment as base and check if there are any segments that overlap with it. If yes, we increment i so
+  that we can ignore the overlapping segments.
+*/
 function collectingSignatures(n, segments) {
   const points = [];
   let i = 0;
