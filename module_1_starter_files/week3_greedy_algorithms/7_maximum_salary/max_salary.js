@@ -25,7 +25,10 @@ rl.on('line', (line) => {
     process.exit();
   }
 });
-
+/*
+  LOGIC: 
+  Compare if two negibouring numbers are in correct order (when they are concatenated what value is bigger) 
+*/
 function maxSalary(n, numbers) {
   numbers = numbers.map(String);
   numbers.sort((a, b) => {
