@@ -39,3 +39,16 @@ function minMovesToString(string) {
 // console.log(minMovesToString('OOOO'));
 console.log(minMovesToString('OXOX'));
 // console.log(minMovesToString('XX0000XXX'));
+
+function optimalSolution(s) {
+  let moves = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    if (s[i] === 'X') {
+      moves++;
+      i += 2;
+    }
+  }
+
+  return moves;
+}
