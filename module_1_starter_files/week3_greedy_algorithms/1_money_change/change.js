@@ -94,3 +94,8 @@ function moneyChange(money) {
 
   return numCoins;
 }
+
+/*
+CLRS problem statement:
+Describe a greedy algorithm to make change consisting of quarters, dimes, nickels, and pennies. Prove that your algorithm yields an optimal solution.
+*/
