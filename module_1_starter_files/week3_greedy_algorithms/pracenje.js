@@ -206,6 +206,27 @@ function academicMaxLootValue(weights, values, capacity) {
     amounts
   }
 }
-console.time('a');
-console.log(academicMaxLootValue([5, 4, 3], [30, 28, 24], 100));
-console.timeEnd('a');
+// console.time('a');
+// console.log(academicMaxLootValue([5, 4, 3], [30, 28, 24], 100));
+// console.timeEnd('a');
+
+function activitySelector(activities) {
+  const sortedByFinishTime = activities.sort((a,b) => a[1] - b[1]);
+  const events = [];
+  let time = 0;
+
+  for (let i = 0; i < activities.length; i++) {
+    if (activities[i][0] > time) {
+      events.push(activities[i]);
+      time = activities[i][1];
+    }
+  }
+
+  return events;
+}
+
+const activities = [[0,6], [3,5], [1, 4], [5,7], [3,9], [5,9], [6,10], [8,11], [8,12], [2,14], [12,16]];
+
+console.time("s");
+console.log(activitySelector(activities));
+console.timeEnd('s');
