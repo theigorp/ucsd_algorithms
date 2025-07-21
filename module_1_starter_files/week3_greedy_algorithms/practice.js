@@ -49,9 +49,6 @@ function fractionalKnapsack(capacity, weights, prices) {
     if (items[i].weight <= capacity) {
       capacity -= items[i].weight;
       lootValue += items[i].price;
-    } else if (capacity >= items[i].weight) {
-      capacity -= items[i].weight;
-      lootValue += items[i].weight * items[i].pricePerKg;
     } else {
       lootValue += items[i].pricePerKg * capacity;
       capacity = 0;
