@@ -261,3 +261,35 @@ function maxSalary(numbers) {
 // 68 6 61
 // console.log(maxSalary([4, 427, 42, 46, 465]));
 // 465 46 4 427 42
+
+function minimizeMaxLateness(executionTimes, deadlines) {
+  const jobs = executionTimes.map((time, index) => ({
+    time,
+    deadline: deadlines[index]
+  }));
+  jobs.sort((a,b) => a.deadline - b.deadline);
+  // greedy choice is to select the job with the closest deadline first
+
+  const missedDeadlines = [];
+  let currentTime = 0;
+
+  for (const job of jobs) {
+    currentTime += job.time;
+
+    if (currentTime > job.deadline) {
+      const jobLateness = currentTime - job.deadline;
+      missedDeadlines.push(jobLateness);
+    }
+  }
+
+  return missedDeadlines.length ? Math.max(...missedDeadlines) : 0;
+}
+
+// console.log(minimizeMaxLateness([2, 1, 2, 3, 4, 3], [8, 9, 15, 6, 9, 14]));
+// console.log(minimizeMaxLateness([3, 4, 2], [4, 5, 7]));
+// console.log(minimizeMaxLateness([1, 2, 1], [5, 10, 15]));
+// console.log(minimizeMaxLateness([5, 5, 5], [3, 4, 5]));
+// console.log(minimizeMaxLateness([2, 1, 4, 1], [3, 9, 5, 7]));
+// console.log(minimizeMaxLateness([3, 2, 1], [6, 4, 5]));
+// console.log(minimizeMaxLateness([0, 0, 0], [1, 2, 3]));
+// console.log(minimizeMaxLateness([4], [5]));
