@@ -293,3 +293,30 @@ function minimizeMaxLateness(executionTimes, deadlines) {
 // console.log(minimizeMaxLateness([3, 2, 1], [6, 4, 5]));
 // console.log(minimizeMaxLateness([0, 0, 0], [1, 2, 3]));
 // console.log(minimizeMaxLateness([4], [5]));
+
+function optimalCaching(cache, data, k) {
+  let misses = 0;
+  const set = new Set(cache);
+  // sort the set alphabetiacally
+
+  for (const entry of data) {
+    if (!set.has(entry)) {
+      console.log('missing entry is ', entry);
+      misses++;
+      if (set.size === k) {
+        console.log('S before', set.keys());
+        set.delete(set.values().next().value);
+        console.log('S after', set.values());
+        set.add(entry);
+      } else {
+        console.log('aaa')
+      }
+      console.log('S final', set.values());
+    }
+  }
+
+  return misses;
+}
+
+// console.log(optimalCaching(['a', 'b'], ['a', 'b', 'c', 'b', 'c', 'a', 'b'], 2));
+console.log(optimalCaching(['a', 'b', 'c'], ['a', 'b', 'c', 'd', 'a', 'd', 'e', 'a', 'd', 'b', 'c'], 4));
