@@ -265,9 +265,9 @@ function maxSalary(numbers) {
 function minimizeMaxLateness(executionTimes, deadlines) {
   const jobs = executionTimes.map((time, index) => ({
     time,
-    deadline: deadlines[index]
+    deadline: deadlines[index],
   }));
-  jobs.sort((a,b) => a.deadline - b.deadline);
+  jobs.sort((a, b) => a.deadline - b.deadline);
   // greedy choice is to select the job with the closest deadline first
 
   const missedDeadlines = [];
@@ -294,29 +294,106 @@ function minimizeMaxLateness(executionTimes, deadlines) {
 // console.log(minimizeMaxLateness([0, 0, 0], [1, 2, 3]));
 // console.log(minimizeMaxLateness([4], [5]));
 
+/*
+Offline: full sequence of requests is known a priori. - evict the item that's not requested until farthers in future
+Online (reality): requests are not known in advance. - LRU 
+*/
 function optimalCaching(cache, data, k) {
   let misses = 0;
-  const set = new Set(cache);
-  // sort the set alphabetiacally
+  // const set = new Set(cache);
 
-  for (const entry of data) {
-    if (!set.has(entry)) {
-      console.log('missing entry is ', entry);
+  for (let i = 0; i < data.length; i++) {
+    const entry = data[i];
+    if (!cache.includes(entry)) {
       misses++;
-      if (set.size === k) {
-        console.log('S before', set.keys());
-        set.delete(set.values().next().value);
-        console.log('S after', set.values());
-        set.add(entry);
+      // assume cache is always full
+      // find the index of where each cache item appears in the future data (splice the data at current index)
+      // calculate the distance between the current index and the indexes of cache items
+      // choose the largest index - that means that data entry is the farthest in future requested item or item with index -1
+      // replace the cache at the largest index with the entry that we need
+      const dataFromThisPoint = data.slice(i + 1);
+      const cacheItemIndexes = cache.map((entry) => dataFromThisPoint.indexOf(entry));
+
+      const itemThatDoesntAppearIndex = cacheItemIndexes.findIndex((value) => value === -1);
+      // if there's an item that doesn't appear again in the data sequence, we'll evict that one out
+      if (itemThatDoesntAppearIndex !== -1) {
+        cache.splice(itemThatDoesntAppearIndex, 1, entry);
       } else {
-        console.log('aaa')
+        // use the largestIndex to identify the value of the cache item that needs to be evicted
+        // find it's index in cache by comparing it's value
+        const largestIndex = Math.max(...cacheItemIndexes);
+        const cacheItemToEvict = dataFromThisPoint[largestIndex];
+        const itemToEvictIndex = cache.findIndex((item) => item === cacheItemToEvict);
+        cache.splice(itemToEvictIndex, 1, entry);
       }
-      console.log('S final', set.values());
     }
   }
 
   return misses;
 }
 
+console.log(optimalCaching(['a', 'b'], ['a', 'b', 'c', 'd', 'a', 'b'], 2));
 // console.log(optimalCaching(['a', 'b'], ['a', 'b', 'c', 'b', 'c', 'a', 'b'], 2));
-console.log(optimalCaching(['a', 'b', 'c'], ['a', 'b', 'c', 'd', 'a', 'd', 'e', 'a', 'd', 'b', 'c'], 4));
+// console.log(optimalCaching(['a', 'b', 'c'], ['a', 'b', 'c', 'd', 'a', 'd', 'e', 'a', 'd', 'b', 'c'], 3));
+// console.log(optimalCaching(['d', 'b', 'y', 'a'], ['b', 'c', 'e', 'f', 'c', 'd', 'a', 'e', 'a', 'c'], 4));
+
+function academicOptimalCaching(cacheInput, sequence, k) {
+  const cache = new Set(cacheInput);
+  let misses = 0;
+
+  for (let i = 0; i < sequence.length; i++) {
+    const current = sequence[i];
+
+    if (!cache.has(current)) {
+      misses++;
+
+      if (cache.size < k) {
+        cache.add(current);
+      } else {
+        let toEvict = null;
+        let farthestIndex = -1;
+        const dataFromThisPoint = sequence.slice(i + 1);
+
+        for (let item of cache) {
+          // we slice at i + 1 because we don't need the item that we're currently
+          // we find the index at which each cache item appears the next time
+          // if it doesn't appear ever again (-1), we break the loop as we found at which index to replace the cache (evict and add new item)
+          // if item appears again, we set fartherstIndex and toEvict to that item, but when we go through the full loop,
+          // this comparison will choose the largest index of all (farthest item) and set that item to be evicted
+          const nextIndex = dataFromThisPoint.indexOf(item);
+          if (nextIndex === -1) {
+            toEvict = item;
+            break;
+          } else if (nextIndex > farthestIndex) {
+            farthestIndex = nextIndex;
+            toEvict = item;
+          }
+        }
+
+        cache.delete(toEvict);
+        cache.add(current);
+      }
+    }
+  }
+
+  return misses;
+}
+
+/*
+Quantum antimatter fuel comes in small pellets, which is convenient since the
+many moving parts of the LAMBCHOP each need to be fed fuel one pellet at a
+time. However, minions dump pellets in bulk into the fuel intake. You need to
+figure out the most efficient way to sort and shift the pellets down to a single
+pellet at a time.
+The fuel control mechanisms have three operations:
+• Add 1 fuel pellet
+• Remove 1 fuel pellet
+• Divide the entire group of fuel pellets by 2 (due to the destructive energy
+released when a quantum antimatter pellet is cut in half, the safety controls
+will only allow this to happen if there is an even number of pellets)
+Write a function called answer(n) which takes a positive integer n as a string
+and returns the minimum number of operations needed to transform the
+number of pellets to 1.
+
+29 → 28 → 14 → 7 → 8 → 4 → 2 → 1
+*/
