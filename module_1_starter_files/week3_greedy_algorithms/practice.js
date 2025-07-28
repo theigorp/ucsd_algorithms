@@ -179,16 +179,15 @@ function adRevenue(prices, clicks) {
 function collectingSignatures(segments) {
   const coordinates = [];
   segments.sort((a, b) => a[1] - b[1]);
-  let selectedPoint = segments[0][1];
 
   while (segments.length > 0) {
+    const selectedPoint = segments[0][1];
     const coveredSegments = segments.filter((segment) => selectedPoint >= segment[0]);
     coordinates.push(selectedPoint);
     segments = segments.filter((segment) => !coveredSegments.includes(segment));
     if (segments.length === 0) {
       return coordinates;
     }
-    selectedPoint = segments[0][1];
   }
 }
 
