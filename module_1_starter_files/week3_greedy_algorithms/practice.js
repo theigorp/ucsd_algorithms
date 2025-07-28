@@ -119,6 +119,32 @@ function carFueling(distance, milesOnFullTank, gasStations) {
   return refills;
 }
 
+function carFuelingSimple(totalDistance, tankCapacity, gasStations) {
+  if (gasStations[0] > tankCapacity) return -1;
+
+  for (let i = 0; i < gasStations.length - 1; i++) {
+    if (gasStations[i + 1] - gasStations[i] > tankCapacity) return -1;
+  }
+
+  if (totalDistance - gasStations[gasStations.length - 1] > tankCapacity) return -1;
+
+  gasStations.push(totalDistance);
+
+  let refills = 0;
+  let lastStation = 0;
+
+  for (let i = 0; i < gasStations.length - 1; i++) {
+    // If next station is too far from last refill point
+    if (gasStations[i + 1] - lastStation > tankCapacity) {
+      refills++;
+      lastStation = gasStations[i];
+    }
+  }
+
+  return refills;
+}
+
+
 // console.log(carFueling(950, 400, [200, 375, 550, 750])) //T
 // console.log(carFueling(950, 400, [200, 200, 200, 200])) // T
 // console.log(carFueling(950, 400, [200, 200, undefined, 200]))// T
@@ -332,7 +358,7 @@ function optimalCaching(cache, data, k) {
   return misses;
 }
 
-console.log(optimalCaching(['a', 'b'], ['a', 'b', 'c', 'd', 'a', 'b'], 2));
+// console.log(optimalCaching(['a', 'b'], ['a', 'b', 'c', 'd', 'a', 'b'], 2));
 // console.log(optimalCaching(['a', 'b'], ['a', 'b', 'c', 'b', 'c', 'a', 'b'], 2));
 // console.log(optimalCaching(['a', 'b', 'c'], ['a', 'b', 'c', 'd', 'a', 'd', 'e', 'a', 'd', 'b', 'c'], 3));
 // console.log(optimalCaching(['d', 'b', 'y', 'a'], ['b', 'c', 'e', 'f', 'c', 'd', 'a', 'e', 'a', 'c'], 4));
