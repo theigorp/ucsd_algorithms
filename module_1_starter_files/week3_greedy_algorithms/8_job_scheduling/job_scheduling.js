@@ -43,7 +43,35 @@ function jobScheduling(profits, deadlines) {
   return optimalOrderingOfJobs.filter(job => job !== null);
 }
 
-console.log(jobScheduling([20, 10, 40, 30], [4, 1, 1, 1]))
-console.log(jobScheduling([100, 19, 27, 25, 15], [2, 1, 2, 1, 1]))
-console.log(jobScheduling([60, 25, 65, 22, 70, 20, 10, 80], [5, 4, 6, 2, 6, 4, 2, 2]));
+function optimized(profits, deadlines) {
+  const jobs = profits.map((profit, i) => ({
+    profit,
+    deadline: deadlines[i]
+  }));
+  jobs.sort((a,b) => b.profit - a.profit);
+  
+  const TIME_TO_PERFORM_JOB = 1;
+  const MAX_DEADLINE = Math.max(...jobs.map(job => job.deadline));
+  //* this should be a priority queue / min heap - in that case we'll have an O(nlogn) solution 
+  const optimalOrderingOfJobs = new Array(MAX_DEADLINE).fill(null);
+
+  for (const job of jobs) {
+    const jobPosition = job.deadline - TIME_TO_PERFORM_JOB;
+
+    // start backwards from job position - if the last available time to perform the job (jobPosition) is available, set it at that position.
+    // if it's not available, try the slot that's sooner that jobPosition by 1. O(m) - m is MAX_DEADLINE
+    for (let i = jobPosition; i >= 0; i--) {
+      if (optimalOrderingOfJobs[i] === null) {
+        optimalOrderingOfJobs[i] = job;
+        break;
+      }
+    }
+  }
+
+  return optimalOrderingOfJobs.filter(job => job !== null);
+}
+
+// console.log(optimized([20, 10, 40, 30], [4, 1, 1, 1]))
+// console.log(jobScheduling([100, 19, 27, 25, 15], [2, 1, 2, 1, 1]))
+console.log(optimized ([60, 25, 65, 22, 70, 20, 10, 80], [5, 4, 6, 2, 6, 4, 2, 2]));
 // console.log(jobScheduling())
