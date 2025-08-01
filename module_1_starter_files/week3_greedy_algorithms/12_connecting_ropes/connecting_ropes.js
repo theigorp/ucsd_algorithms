@@ -1,34 +1,26 @@
 /*
   LOGIC:
-    To get the minimum cost we need to sort the array in an ascending order. The way we calculate cost is by summing every rope
-    with the sum of the previous 2 ropes -> connectingRopes([1,2,4]) = (1+2) + (1+2+4) = 10.
+    To get the minimum cost we need to sort the array in an ascending order. The greedy approach is to sum the first 2 elements as they
+    are smallest, remove them from the array and add the newly formed rope to the existing array. We should then sort the array again so
+    that the newly formed rope falls in correct place. Then, repeat the same again.
   
   OPTIMIZATIONS:
-   Runtime is O(nlogn) in the worst case or O(1) in the best case.
+   Runtime is O(n^2logn) which is not optimal. In order to get O(nlogn) we should implement a MinHeap/PriorityQueue
 */
 function connectingRopes(ropes) {
-  //* O(1)
-  if (ropes.length === 1) {
-    return 0;
-  } else if (ropes.length === 2) {
-    return ropes[0] + ropes[1];
-  }
-  //* O(nlogn)
-  ropes.sort((a,b) => a - b);
-  let cost = 0;
-  const pairs = [];
+  let minCost = 0;
   //* O(n)
-  for (let i = 0; i < ropes.length; i++) {
-    if (i === 0) {
-      cost += ropes[i] + ropes[i + 1];
-      pairs.push(cost);
-    } else if (i !== 1) {
-      cost += ropes[i];
-      pairs.push(cost);
-    }
+  while(ropes.length > 1) {
+    //* O(nlogn)
+    ropes.sort((a,b) => a - b);
+    const cost = ropes[0] + ropes[1];
+    minCost += cost;
+    //* O(n)
+    ropes.splice(0,2);
+    ropes.push(cost);
   }
-  //* O(n)
-  return pairs.reduce((minCost, current) => minCost + current);
+
+  return minCost;
 }
 
 console.log(connectingRopes([2,5,4,8])) // 36
@@ -37,3 +29,4 @@ console.log(connectingRopes([4,1, 2])) // 10
 console.log(connectingRopes([4])) // 0
 console.log(connectingRopes([4, 1])) // 5
 console.log(connectingRopes([7,2,1,4,8])) //46
+console.log(connectingRopes([56927, 40707, 68170, 54560])) // 440728
