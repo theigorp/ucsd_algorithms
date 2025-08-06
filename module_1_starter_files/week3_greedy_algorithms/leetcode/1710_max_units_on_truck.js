@@ -1,19 +1,25 @@
+/*
+  *EASY
+
+  LOGIC:
+  Sort boxes by the amount of their units as we need to maximize the total number of units. Loop over box types and choose as many boxes as it can fit into truckSize.
+  Use boxesToTake = Math.min(box, truckSize) to simplify logic. Increment totalUnits += boxesToTake * units and subtract the box from truckSize. If truckSize is 0, break.
+
+  OPTIMIZATION:
+  The runtime is O(nlogn).
+*/
 function maximumUnitsOnTruck(boxTypes, truckSize) {
   let totalUnits = 0;
-
+  //* O(nlogn)
   boxTypes.sort((a, b) => b[1] - a[1]);
 
-  let i = 0;
-  while (truckSize > 0) {
-    if (i === boxTypes.length) break;
-    if (boxTypes[i][0] <= truckSize) {
-      totalUnits += boxTypes[i][0] * boxTypes[i][1];
-      truckSize -= boxTypes[i][0];
-      i++;
-    } else {
-      totalUnits += truckSize * boxTypes[i][1];
-      truckSize = 0;
-    }
+  //* O(n)
+  for (const [box, units] of boxTypes) {
+    // if truckSize is smaller than the amount of available boxes, take truckSize amount of boxes
+    const boxesToTake = Math.min(box, truckSize);
+    totalUnits += boxesToTake * units;
+    truckSize -= box;
+    if (truckSize === 0) break;
   }
 
   return totalUnits;
