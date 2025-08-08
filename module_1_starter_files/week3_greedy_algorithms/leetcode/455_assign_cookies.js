@@ -2,33 +2,26 @@
   *EASY
 
   LOGIC:
+  To be updated.
 
   OPTIMIZATION:
   The runtime is O(n^2). Perhaps it can be O(nlogn)?
 */
 function assignCookies(g, s) {
-  let contentChildren = 0;
-  //* O(nlogn)
   g.sort((a, b) => a - b);
   s.sort((a, b) => a - b);
-  
-  const minimumGreediness = g[0];
-  //* O(n)
-  s = s.filter((cookieSize) => cookieSize >= minimumGreediness);
-  //* O(n^2)
-  for (let i = 0; i < g.length; i++) {
-    //* O(n)
-    const assignedCookie = s.find(cookieSize => cookieSize >= g[i]);
-    if (assignedCookie) {
-      //* O(n)
-      s = s.filter(cookieSize => cookieSize !== assignedCookie);
+  let contentChildren = 0;
+  let cookieIndex = 0;
+
+  while (cookieIndex < s.length && contentChildren <= g.length) {
+    if (s[cookieIndex] >= g[contentChildren]) {
       contentChildren++;
     }
+    cookieIndex++;
   }
 
   return contentChildren;
 }
-//  s = [...new Set(s)]; - remove duplicates
 // console.log(assignCookies([1,2,3], [1,1])); // 1
 // console.log(assignCookies([1,2], [1,2,3])); // 2
 // console.log(assignCookies([10, 9, 8, 7], [5, 6, 7, 8])); // 2
