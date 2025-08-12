@@ -2,17 +2,19 @@
   *EASY
 
   LOGIC:
-  To be updated.
+  Choose the smallest possible cookie to satisfy the child. Loop over cookies until you find a suitable cookie to satisfy a child.
+  Only then increment contentChildren to move on to the next child.
 
   OPTIMIZATION:
-  The runtime is O(n^2). Perhaps it can be O(nlogn)?
+  The runtime is O(nlogn + mlogm).
 */
 function assignCookies(g, s) {
+  //* O(nlogn + mlogm)
   g.sort((a, b) => a - b);
   s.sort((a, b) => a - b);
   let contentChildren = 0;
   let cookieIndex = 0;
-
+  //* O(n+m)
   while (cookieIndex < s.length && contentChildren <= g.length) {
     if (s[cookieIndex] >= g[contentChildren]) {
       contentChildren++;
