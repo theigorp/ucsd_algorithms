@@ -55,4 +55,6 @@ function optimizedValidPalindrome(s) {
   return true;
 }
 
-console.log(validPalindrome('abbca'));
+console.log(optimizedValidPalindrome('abbca'));
+console.log(optimizedValidPalindrome('nevena'));
+console.log(optimizedValidPalindrome('aracecar'));
