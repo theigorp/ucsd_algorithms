@@ -1,30 +1,28 @@
 function gasStation(gas, cost) {
-  const startIndices = [];
-  //* O(n)
+  const gasAmountAfterCost = [];
   for (let i = 0; i < gas.length; i++) {
-    if (gas[i] >= cost[i]) {
-      startIndices.push(i);
-    }
+    gasAmountAfterCost.push(gas[i] - cost[i]);
   }
-  //* O(n^2) worst case or O(n*m) m - is the length of startIndices. Time limit is exceeded with this approach.
-  for (const index of startIndices) {
-    let currentIndex = index;
-    let gasAmount = gas[currentIndex];
-    //* O(n)
-    while (gasAmount >= cost[currentIndex]) {
-      const nextIndex = (currentIndex + 1) % gas.length;
-      if (nextIndex === index) {
-        return index;
-      }
-      gasAmount = gasAmount - cost[currentIndex] + gas[nextIndex];
-      currentIndex = nextIndex;
+  const maxGasAmount = Math.max(...gasAmountAfterCost);
+  const startIndex = gasAmountAfterCost.findIndex(gasAmount => gasAmount === maxGasAmount);
+
+  let currentIndex = 3;
+  let gasAmount = gas[currentIndex];
+  //* O(n)
+  while (gasAmount >= cost[currentIndex]) {
+    const nextIndex = (currentIndex + 1) % gas.length;
+    if (nextIndex === startIndex) {
+      return startIndex;
     }
+    gasAmount = gasAmount - cost[currentIndex] + gas[nextIndex];
+    currentIndex = nextIndex;
   }
 
   return -1;
-};
+}
 
-console.log(gasStation([1,2,3,4,5], [3,4,5,1,2]))
+// console.log(gasStation([1, 2, 3, 4, 5], [3, 4, 5, 1, 2]));
 // console.log(gasStation([1,2,3,4,5], [3,4,5,6,7]))
 // console.log(gasStation([2,3,4], [3,4,3]))
 // console.log(gasStation([5, 1, 2, 3, 4], [4, 4, 1, 5, 1]));
+console.log(gasStation([5,8,2,8], [6,5,6,6]));
