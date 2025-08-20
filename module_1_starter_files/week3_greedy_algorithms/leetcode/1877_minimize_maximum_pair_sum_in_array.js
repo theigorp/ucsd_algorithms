@@ -12,15 +12,14 @@ function minimizeMaximumPairSumInArray(nums) {
   nums.sort((a,b) => a - b);
   let l = 0;
   let r = nums.length - 1;
-  const pairs = [];
+  const pairSums = [];
 
   while (l < r) {
-    pairs.push([nums[l], nums[r]]);
+    pairSums.push(nums[l] + nums[r]);
     l++;
     r--;
   }
 
-  const pairSums = pairs.map(pair => pair[0] + pair[1]);
   return Math.max(...pairSums);
 }
 
