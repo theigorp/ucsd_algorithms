@@ -1,24 +1,34 @@
+/*
+  *MEDIUM
+
+  LOGIC:
+  We just need to track how many times the direction changed up/down (count peaks and valleys). Track the previous difference between 2 elements
+  to count how many times direction changed. Initialize prevDiff to 0, loop over nums and if currentDiff > 0 and prevDiff < 0 or vice versa that
+  means that direction is changing and we should increment maxLength and set prevDiff to currDiff.
+
+
+  OPTIMIZATION:
+  The runtime is O(n). No optimization can be made.
+*/
 function wiggleSubsequence(nums) {
   if (nums.length === 1) {
     return nums.length;
   }
 
-  let up = 1;
-  let down = 1;
+  let previousDifference = 0;
+  let maxLength = 1; // it will be at least 1
 
+  //* O(n) - we initialize i to 1 for easier bound handling
   for (let i = 1; i < nums.length; i++) {
-    console.log('nums[i]', nums[i])
-    console.log('nums[i-1]', nums[i - 1])
-    if (nums[i] > nums[i - 1]) {
-      up = down + 1;
-      console.log('up after', up)
-    } else if (nums[i] < nums[i - 1]) {
-      down = up + 1;
-      console.log('down after', down);
+    const difference = nums[i] - nums[i - 1];
+    
+    if (nums[i] > 0 && previousDifference <= 0 || nums[i] < 0 && previousDifference >= 0) {
+      maxLength++;
+      previousDifference = difference;
     }
   }
 
-  return Math.max(up, down);
+  return maxLength;
 };
 
 // console.log(wiggleSubsequence([1,2,3,4,5,6,7,8,9]));
