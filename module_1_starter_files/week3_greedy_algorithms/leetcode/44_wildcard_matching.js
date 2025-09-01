@@ -1,33 +1,31 @@
 function wildcardMatching(s, p) {
-  let sIndex = 0;
-  let pIndex = 0;
-  let lastSeenAsteriskIndexInS = 0;
-  let lastSeenAsteriskIndex = -1;
+  let sIdx = 0;
+  let pIdx = 0;
+  let lastSeenAsteriskS = 0;
+  let lastSeenAsteriskP = -1;
 
-  while (sIndex < s.length) {
-    if (s[sIndex] === p[pIndex] || p[pIndex] === '?') {
-      sIndex++;
-      pIndex++;
-    } else if (p[pIndex] === '*') {
-      lastSeenAsteriskIndexInS = sIndex;
-      lastSeenAsteriskIndex = pIndex;
-      pIndex++;
+  while (sIdx < s.length) {
+    if (s[sIdx] === p[pIdx] || p[pIdx] === '?') {
+      sIdx++;
+      pIdx++;
+    } else if (p[pIdx] === '*') {
+      lastSeenAsteriskS = sIdx;
+      lastSeenAsteriskP = pIdx;
+      pIdx++;
+    } else if (lastSeenAsteriskP !== -1) {
+      pIdx = lastSeenAsteriskP + 1;
+      lastSeenAsteriskS++;
+      sIdx = lastSeenAsteriskS;
     } else {
-      if (lastSeenAsteriskIndex !== -1) {
-        pIndex = lastSeenAsteriskIndex + 1;
-        lastSeenAsteriskIndexInS++;
-        sIndex = lastSeenAsteriskIndexInS;
-      } else {
-        return false;
-      }
+      return false;
     }
   }
 
-  while (pIndex < p.length && p[pIndex] === '*') {
-    pIndex++;
+  while (pIdx < p.length && p[pIdx] === '*') {
+    pIdx++;
   }
 
-  return pIndex === p.length;
+  return pIdx === p.length;
 }
 
 // console.log(wildcardMatching('aajki', '*?i')); // t
